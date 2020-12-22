@@ -26,7 +26,11 @@ end
 assign instr_addr_o = pc;
 assign instr_valid_id_o = 1'b1;
 
-always @(posedge clk_i) begin
+always @(posedge clk_i or posedge rst_i) begin
+    if (rst_i) begin
+        instr_data_id_o <= 0;
+    end
+    else
     if (instr_valid_id_o) begin
         instr_data_id_o <= instr_rdata_i;
     end
