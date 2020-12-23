@@ -21,7 +21,7 @@
 // ALU operation
 
 `define ALU_ADD    7'b0011000    //18
-`define ALU_SUB    7'b0011001
+`define ALU_SUB    7'b0011001    //19
 `define ALU_ADDU   7'b0011010
 `define ALU_SUBU   7'b0011011
 `define ALU_ADDR   7'b0011100
@@ -30,8 +30,8 @@
 `define ALU_SUBUR  7'b0011111
 
 `define ALU_XOR    7'b0101111
-`define ALU_OR     7'b0101110
-`define ALU_AND    7'b0010101
+`define ALU_OR     7'b0101110    //2e
+`define ALU_AND    7'b0010101    //15
 
 // Shifts
 `define ALU_SRA    7'b0100100
