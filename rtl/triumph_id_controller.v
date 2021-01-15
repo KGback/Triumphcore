@@ -24,7 +24,7 @@ always @(*)begin
         `OP_R_R:                                            instr_type = `INSTR_R;
         `OP_R_IMM,`OP_SYSTEM, `OP_FENCE,`OP_LOAD,`OP_JALR:  instr_type = `INSTR_I;
         `OP_STORE:                                          instr_type = `INSTR_S;
-        `OP_BRANCH:                                         instr_type = `INSTR_B;
+        `OP_BEQ, `OP_BNE:                                   instr_type = `INSTR_B;
         `OP_JAL:                                            instr_type = `INSTR_J;
         `OP_AUIPC, `OP_LUI:                                 instr_type = `INSTR_U;
         default:                                            instr_type = 3'b000;
@@ -53,7 +53,7 @@ always @(*) begin
         begin
             if (funct3_i == 3'b110)                    //ORI
                 op_type = `ALU_OR;
-            else if (funct3_i == 3'b110)               //lw
+            else if (funct3_i == 3'b010)               //lw
                 op_type = `ALU_ADD;
             else op_type = `OP_JALR;                //JALR
         end
@@ -64,8 +64,8 @@ always @(*) begin
         end
         `INSTR_B:
         begin
-            if (funct3_i == 3'b000)                    //BEQ
-                op_type = `ALU_SUB;                            
+            //if (funct3_i == 3'b000 || funct3_i == 3'b000)                    //BEQ
+            op_type = `ALU_SUB;                      //BNE BEQ      
         end
         `INSTR_J:  op_type = `OP_JAL;               //JAL
         `INSTR_U:  op_type = `OP_LUI;               //LUI

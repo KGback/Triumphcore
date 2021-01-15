@@ -4,14 +4,15 @@
 `define INSTR_B     3'b100
 `define INSTR_U     3'b101
 `define INSTR_J     3'b110
-
+// opcode
 `define OP_SYSTEM	7'h73
 `define OP_FENCE	7'h0f
 `define OP_R_R		7'h33     //
 `define OP_R_IMM	7'h13
 `define OP_STORE	7'h23
 `define OP_LOAD	    7'h03
-`define OP_BRANCH	7'h63
+`define OP_BNE	    7'h63
+`define OP_BEQ  	7'h64
 `define OP_JALR	    7'h67
 `define OP_JAL		7'h6f
 `define OP_AUIPC	7'h17

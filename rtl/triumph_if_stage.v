@@ -10,12 +10,11 @@ module triumph_if_stage(
     // Output of IF Pipeline stage
     output wire             instr_valid_id_o,      // instruction in IF/ID pipeline is valid
     output reg       [31:0] instr_data_id_o,      // read instruction is sampled and sent to ID stage for decoding
-
     // id
     input  wire      [31:0] opPC_data_i,
-
     // ex 
-    input  wire             pc_mux_i
+    input  wire             pc_mux_i,
+    input  wire             flag1s_i   
  );
 
 reg [31:0] pc;
@@ -28,10 +27,21 @@ always @(posedge clk_i or posedge rst_i) begin
     end
     else begin
         opPC_data   <= opPC_data_i;
-        if (pc_mux_i) begin
-            pc      <= pc + opPC_data;
+        if (pc > 29) begin
+           // if (flag1s_i) begin
+                pc <= 32'b0;
+           // end
+           // else begin
+           //     pc <= pc;
+           // end
+            
         end
-        else  pc    <= pc + 32'b1;
+        else begin
+            if (pc_mux_i) begin
+            pc      <= pc + opPC_data;
+            end
+            else  pc    <= pc + 32'b1;
+        end    
     end
 end
 
