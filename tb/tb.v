@@ -41,20 +41,6 @@ wire        dcache_write_en;
 
 wire [31:0]   data_display;
 
-clk_gen clk_gen_i(
-    .clk            ( clk_i     ),
-    .rst            ( rst_i     ),
-    .clk50_o        ( clk50     ),
-    .clk25_o        ( clk25     )
-);
-
-wire flag1s;
-timer timer_i(
-    .clk            ( clk_i     ),
-    .rst            ( rst_i     ),
-    .flag1s         ( flag1s    )
-);
-
 triumph_core dut(
     .clk_i              ( clk25             ),
     .rst_i              ( rst_i             ),
@@ -86,18 +72,6 @@ sram_data sram_data_i(
     .addr_i         ( dcache_addr       ),
     .wdata_i        ( dcache_wdata      ),
     .rdata_o        ( dcache_rdata      )
-);
-
-seg_screen seg_screen_i(
-    .clk            ( clk_i             ),
-    .rst            ( rst_i             ),
-    //.value_i        ( pc[15:0]),
-    //.value_i        ( sram_data_i.ram[2][15:0]),
-    .value_i        ( data_display[15:0]),
-    //.value_i        ( dut.op3_data_wb_q[15:0]),
-    .seg_byte       ( seg_byte_o        ),
-    .seg_bit        ( seg_bit_o         ),
-    .dp             ( dp_o              )
 );
 
 
