@@ -1,0 +1,11 @@
++incdir+${RTL_DIR}
+
+${RTL_DIR}/triumph_controller.v
+${RTL_DIR}/triumph_id_controller.v
+${RTL_DIR}/triumph_riscv_defines.v
+${RTL_DIR}/triumph_id_stage.v
+${RTL_DIR}/triumph_wb_stage.v
+${RTL_DIR}/triumph_core.v
+${RTL_DIR}/triumph_if_stage.v
+${RTL_DIR}/triumph_ex_stage.v
+${RTL_DIR}/triumph_regfile_ff.v

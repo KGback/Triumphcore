@@ -1,0 +1,6 @@
++incdir+${TB_DIR}
+
+${TB_DIR}/sram_data.v
+${TB_DIR}/sram_instr.v
+${TB_DIR}/tb.sv
+${TB_DIR}/triumphcore_wrapper.sv

@@ -20,29 +20,23 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module SoC_top(
-    input   wire        clk_i,
-    input   wire        rst_i,
-    //IO: SMG
-    output  wire  [3:0]  seg_byte_o,
-    output  wire  [6:0]  seg_bit_o,
-    output  wire         dp_o
+module triumphcore_wrapper(
+    input   logic        clk_i,
+    input   logic        rst_i
     );
 
-wire clk50,clk25;
+logic [31:0] pc;
+logic [31:0] instr_rdata;
 
-wire [31:0] pc;
-wire [31:0] instr_rdata;
+logic [31:0] dcache_addr;
+logic [31:0] dcache_rdata;
+logic [31:0] dcache_wdata;
+logic        dcache_write_en;
 
-wire [31:0] dcache_addr;
-wire [31:0] dcache_rdata;
-wire [31:0] dcache_wdata;
-wire        dcache_write_en;
+logic [31:0]   data_display;
 
-wire [31:0]   data_display;
-
-triumph_core dut(
-    .clk_i              ( clk25             ),
+triumph_core triumph_core_i(
+    .clk_i              ( clk_i             ),
     .rst_i              ( rst_i             ),
     .flag1s_i           ( flag1s            ),
     .instr_addr_o       ( pc                ),
@@ -55,7 +49,7 @@ triumph_core dut(
     );
 
 sram_instr sram_instr_i(
-    .clk_i          ( clk25         ),
+    .clk_i          ( clk_i         ),
     .rst_i          ( rst_i         ),
     .req_i          ( 1'b1          ),
     .we_i           ( 1'b0          ),
@@ -65,7 +59,7 @@ sram_instr sram_instr_i(
 );
 
 sram_data sram_data_i(
-    .clk_i          ( clk25             ),
+    .clk_i          ( clk_i             ),
     .rst_i          ( rst_i             ),
     .req_i          ( 1'b1              ),
     .we_i           ( dcache_write_en   ),
