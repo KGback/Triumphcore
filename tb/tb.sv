@@ -16,23 +16,23 @@ initial begin
 end
 
 initial begin
-    rst_i = 1;
-    #20 rst_i = 0;
-    #20 rst_i = 1;
+    rst_i = 0;
+    #40 rst_i = 1;
+    #40 rst_i = 0;
     $display("===============================");
     $display("       simulation begin        ");
     $display("===============================");
-    #5000;
+    #50000;
     $finish;
 end
 
-initial begin
-    while (1) begin
-        #20;
-      // $display("PC: 0x%x",dut.pc); 
-    end
-end
-          
+//initial begin
+//    while (1) begin
+//        #20;
+//      // $display("PC: 0x%x",dut.pc); 
+//    end
+//end
+//          
 
 
 triumphcore_wrapper dut(

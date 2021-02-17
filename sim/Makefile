@@ -8,7 +8,7 @@ ROOT_DIR=  $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))/..
 export RTL_DIR=$(ROOT_DIR)/rtl
 export TB_DIR=$(ROOT_DIR)/tb
 TESTS_DIR=$(ROOT_DIR)/tests
-SIM_DIR=$(ROOT_DIR)/sim
+export SIM_DIR=$(ROOT_DIR)/sim
 BUILD_DIR=$(SIM_DIR)/build
 
 XRUN_RESULTS = $(BUILD_DIR)/xrun_results
@@ -19,15 +19,18 @@ TRIUMPHCORE_FL = $(RTL_DIR)/triumphcore.flist
 TB_FL          = $(TB_DIR)/tb.flist
 
 # xcelium options
-XCOMP_OPT	=		-64bit -access +rwc\
+XCOMP_OPT	=		-64bit \
+					-access +r\
 					-disable_sem2009\
 					-quiet\
 					-sv \
+					-top $(TB_TOP) \
 					+incdir+$(TB_DIR)\
 					+incdir+$(RTL_DIR)\
 					-f $(TRIUMPHCORE_FL) \
 					-f $(TB_FL)
 XELAB_OPT   = 		-64bit\
+					-access +r\
 					-disable_sem2009\
 					-timescale 1ns/1ps\
 					+incdir+$(TB_DIR)\
@@ -69,14 +72,13 @@ xcomp:
 	@echo "$(BANNER)"
 	cd $(XRUN_RESULTS) && xrun -compile\
 		$(XCOMP_OPT) \
-		-top $(TB_TOP) \
 		-l xcomp.log 
 	cd $(XRUN_RESULTS) && xrun -elaborate \
 		${XELAB_OPT}\
 		-l xelab.log
 
 sanity: xcomp
-	@make Fibonacci_seq.xrun RISCV_ISA=fibonacci GUI=YES
+	@make fibonacci.xrun RISCV_ISA=fibonacci GUI=1
 	
 sim: $(target_elf)
 

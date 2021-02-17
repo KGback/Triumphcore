@@ -1,0 +1,71 @@
+
+#
+# Mnemonic Maps
+#
+mmap new  -reuse -name {Boolean as Logic} -radix %b -contents {{%c=FALSE -edgepriority 1 -shape low}
+{%c=TRUE -edgepriority 1 -shape high}}
+mmap new  -reuse -name {Example Map} -radix %x -contents {{%b=11???? -bgcolor orange -label REG:%x -linecolor yellow -shape bus}
+{%x=1F -bgcolor red -label ERROR -linecolor white -shape EVENT}
+{%x=2C -bgcolor red -label ERROR -linecolor white -shape EVENT}
+{%x=* -label %x -linecolor gray -shape bus}}
+
+array unset createdGroup
+array set createdGroup {}
+set id [waveform add -signals [subst  {
+	{[format {tb.clk_i}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {tb.rst_i}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.pc[31:0]}]}
+	} ]]
+waveform format $id -color #ffff00 -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.instr_rdata[31:0]}]}
+	} ]]
+waveform format $id -color #ffff00 -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.opcode[6:0]}]}
+	} ]]
+waveform format $id -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.op1_data[31:0]}]}
+	} ]]
+waveform format $id -color #9900ff -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.op2_data[31:0]}]}
+	} ]]
+waveform format $id -color #9900ff
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.op3_data_wb_d[31:0]}]}
+	} ]]
+waveform format $id -color #999999
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.op3_data_wb_q[31:0]}]}
+	} ]]
+waveform format $id -color #00ffff
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.triumph_id_stage_i.triumph_regfile_ff_i.mem_ff[4]}]}
+	} ]]
+waveform format $id -color #00ffff -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.triumph_id_stage_i.triumph_regfile_ff_i.mem_ff[5]}]}
+	} ]]
+waveform format $id -color #00ffff -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.triumph_id_stage_i.triumph_regfile_ff_i.mem_ff[6]}]}
+	} ]]
+waveform format $id -color #00ffff -bgcolor #000000
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.triumph_core_i.triumph_id_stage_i.triumph_regfile_ff_i.mem_ff[7]}]}
+	} ]]
+waveform format $id -color #00ffff
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.sram_data_i.ram[1]}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {tb.dut.sram_data_i.ram[2]}]}
+	} ]]
+
+waveform xview limits 0 10080ns
