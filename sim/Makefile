@@ -18,6 +18,11 @@ TB_TOP         = $(TB_DIR)/tb.sv
 TRIUMPHCORE_FL = $(RTL_DIR)/triumphcore.flist
 TB_FL          = $(TB_DIR)/tb.flist
 
+
+#=============================================
+#         xcelium comp, elab and simulate
+#=============================================
+
 # xcelium options
 XCOMP_OPT	=		-64bit \
 					-access +r\
@@ -46,19 +51,10 @@ ifeq ($(call IS_YES,$(GUI)),YES)
 XRUN_GUI += -gui
 endif
 
-# some toolchain options
-COMMON32_OPT=-Wa,-march=rv32gv -mabi=ilp32 -march=rv32imac -g -Wl,--start-group,-lg,-lgloss,--end-group -lm -DRVTEST_ASSERT
-GCC_OPTION=-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
-ifeq (${TRACE}, 1)
-	TRACE_OPT = --trace --tracechange
-else
-	TRACE_OPT = 
-endif
 
 # define which test to run 
-RISCV_ISA_ALL = $(shell ls $(TESTS_DIR))
-ifneq (${RISCV_ISA}, )
-include $(TESTS_DIR)/${RISCV_ISA}/scripts/Makefrag 
+ifneq (${TEST}, )
+include $(TESTS_DIR)/${TEST}/scripts/Makefrag 
 endif
 
 target_elf = $(foreach e,$(target_tests),$(e))
@@ -78,25 +74,38 @@ xcomp:
 		-l xelab.log
 
 sanity: xcomp
-	@make fibonacci.xrun RISCV_ISA=fibonacci GUI=1
+	@make sim TEST=fibonacci GUI=1
 	
-sim: $(target_elf)
+sim: xcomp $(target_elf)
 
-
-%.xrun: %.gcc
+%.xrun: %.elf
 	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
 	cd $(XRUN_RESULTS)/$(basename $@) && xrun \
 			$(XSIM_OPT)\
 			-l xsim.log
 	cd $(XRUN_RESULTS)/$(basename $@) && simvision waves.shm
 
-%.gcc:
-	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
-	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-gcc ${COMMON32_OPT} ${GCC_OPTION} ${TESTS_DIR}/${RISCV_ISA}/$(basename $@).S -I$(env_dir) -T${link_file} -o $(basename $@)
-	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objdump -D $(basename $@) > $(basename $@).dump
-
 help:
 	xrun -help
+
+#===========================================
+#       riscv-toolchain gcc, objdump
+#===========================================
+
+# some toolchain options
+COMMON32_OPT=-Wa,-march=rv32i -mabi=ilp32 -g -Wl,--start-group,-lg,-lgloss,--end-group -lm -DRVTEST_ASSERT
+GCC_OPTION=-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
+
+%.elf: ${TESTS_DIR}/${TEST}/%.S
+	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
+	cp ${TESTS_DIR}/${TEST}/$(basename $@).S $(XRUN_RESULTS)/$(basename $@)
+	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-gcc ${COMMON32_OPT} ${GCC_OPTION} -c $< -o $@
+	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objdump -D $@ > $(basename $@).dump
+%.elf: ${TESTS_DIR}/${TEST}/%.c
+	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
+	cp ${TESTS_DIR}/${TEST}/$(basename $@).c $(XRUN_RESULTS)/$(basename $@)
+	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-gcc ${COMMON32_OPT} ${GCC_OPTION} -c $< -o $@
+	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objdump -D $@ > $(basename $@).dump
 
 clean:
 	rm -rf $(BUILD_DIR)
