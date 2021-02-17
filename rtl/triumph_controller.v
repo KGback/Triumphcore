@@ -3,7 +3,7 @@
 module triumph_controller(
     // Clock and Reset
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
     // id
     input wire  [2:0]  instr_type_i,
     input wire  [6:0]  opcode_i,
@@ -24,8 +24,8 @@ reg   [6:0]  opcode;
 reg          wb_mux;
 reg          dcache_write_en;
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
+always @(posedge clk_i or posedge rstn_i) begin
+    if (!rstn_i) begin
         instr_type          <= 3'b0;
         opcode              <= 7'b0;
         wb_mux_o            <= 0;

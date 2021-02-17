@@ -2,7 +2,7 @@
 
 module triumph_id_stage(
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
     // if stage
     input  wire        instr_valid_i,
     input  wire [31:0] instr_data_i,
@@ -43,8 +43,8 @@ reg  [11:0]  imm_12;
 wire [31:0]  rd_data_wb;
 
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
+always @(posedge clk_i or posedge rstn_i) begin
+    if (!rstn_i) begin
         instr_data <= 0;
         op3_addr_wb_d_o <= 32'b0;
     end
@@ -57,7 +57,7 @@ end
 assign opcode_o   = instr_data[6:0];
 
 always @(*) begin
-    if (rst_i) begin
+    if (!rstn_i) begin
         rs1_addr            = 0;
         rs2_addr            = 0;
         rd_addr             = 0;
@@ -125,7 +125,7 @@ end
 // judge the type of instruction and operation
 triumph_id_controller triumph_id_controller_i(
     .clk_i              ( clk_i              ),
-    .rst_i              ( rst_i              ),
+    .rstn_i              ( rstn_i              ),
     .opcode_i           ( opcode_o           ),
     .funct3_i           ( funct3             ),
     .funct7_i           ( funct7             ),
@@ -137,7 +137,7 @@ assign rd_data_wb = wb_mux_i ? dcache_rdata_i : op3_data_wb_i;
 
 triumph_regfile_ff triumph_regfile_ff_i(
     .clk_i              ( clk_i              ),
-    .rst_i              ( rst_i              ),
+    .rstn_i              ( rstn_i              ),
     .rs1_addr_id_i      ( rs1_addr           ),
     .rs1_data_ex_o      ( rs1_data           ),
     .rs2_addr_id_i      ( rs2_addr           ),

@@ -3,7 +3,7 @@
 module triumph_core(
     // Clock and Reset
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
     // instruction memory
     output wire [31:0] instr_addr_o,
     input  wire [31:0] instr_rdata_i,
@@ -49,7 +49,7 @@ assign dcache_addr_o = (dcache_write_en_o|wb_mux) ? op3_data_wb_q : 32'b0;
 
 triumph_if_stage triumph_if_stage_i(
     .clk_i              ( clk_i              ),
-    .rst_i              ( rst_i              ),
+    .rstn_i              ( rstn_i              ),
     .flag1s_i           ( flag1s_i           ),
     .instr_addr_o       ( instr_addr_o       ),
     .instr_rdata_i      ( instr_rdata_i      ),
@@ -61,7 +61,7 @@ triumph_if_stage triumph_if_stage_i(
 
 triumph_id_stage triumph_id_stage_i(
     .clk_i              ( clk_i              ),
-    .rst_i              ( rst_i              ),
+    .rstn_i              ( rstn_i              ),
     .instr_valid_i      ( instr_valid_id     ),
     .instr_data_i       ( instr_rdata_id     ),
     .opPC_data_o        ( opPC_data          ),
@@ -83,7 +83,7 @@ triumph_id_stage triumph_id_stage_i(
 
 triumph_ex_stage triumph_ex_stage_i(
     .clk_i               ( clk_i              ),
-    .rst_i               ( rst_i              ),
+    .rstn_i               ( rstn_i              ),
     .op1_data_i          ( op1_data           ),
     .op2_data_i          ( op2_data           ),
     .op_type_i           ( op_type            ),
@@ -95,7 +95,7 @@ triumph_ex_stage triumph_ex_stage_i(
 
 triumph_wb_stage triumph_wb_stage_i(
     .clk_i               ( clk_i              ),
-    .rst_i               ( rst_i              ),
+    .rstn_i               ( rstn_i              ),
     .op3_addr_id_i       ( op3_addr_wb_d      ),
     .op3_addr_id_o       ( op3_addr_wb_q      ),
     .data_valid_wb_i     ( op3_data_valid_wb_d),
@@ -108,7 +108,7 @@ triumph_wb_stage triumph_wb_stage_i(
 
 triumph_controller triumph_controller_i(
     .clk_i               ( clk_i              ),
-    .rst_i               ( rst_i              ),
+    .rstn_i               ( rstn_i              ),
     .instr_type_i        ( instr_type         ),
     .opcode_i            ( opcode             ),
     .flag_zero_ex_i      ( flag_zero_ex       ),

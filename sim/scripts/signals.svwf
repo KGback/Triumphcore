@@ -15,7 +15,7 @@ set id [waveform add -signals [subst  {
 	{[format {tb.clk_i}]}
 	} ]]
 set id [waveform add -signals [subst  {
-	{[format {tb.rst_i}]}
+	{[format {tb.rstn_i}]}
 	} ]]
 set id [waveform add -signals [subst  {
 	{[format {tb.dut.pc[31:0]}]}

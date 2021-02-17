@@ -1,6 +1,6 @@
 module triumph_wb_stage(
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
     // id stage
     input  wire [4:0]  op3_addr_id_i,
     output reg  [4:0]  op3_addr_id_o,
@@ -15,8 +15,8 @@ module triumph_wb_stage(
 );
 
 
-always @(posedge clk_i or posedge rst_i) begin 
-    if (rst_i)  begin
+always @(posedge clk_i or posedge rstn_i) begin 
+    if (!rstn_i)  begin
         op3_addr_id_o       <= 32'b0;
         op3_data_wb_o       <= 32'b0;
         data_valid_wb_o     <= 0;

@@ -3,7 +3,7 @@
 module tb;
 
 logic clk_i;
-logic rst_i;
+logic rstn_i;
 
 localparam CLK_PERIOD = 20;
 
@@ -16,9 +16,9 @@ initial begin
 end
 
 initial begin
-    rst_i = 0;
-    #40 rst_i = 1;
-    #40 rst_i = 0;
+    rstn_i = 1;
+    #40 rstn_i = 0;
+    #40 rstn_i = 1;
     $display("===============================");
     $display("       simulation begin        ");
     $display("===============================");
@@ -37,7 +37,7 @@ end
 
 triumphcore_wrapper dut(
     .clk_i              ( clk_i             ),
-    .rst_i              ( rst_i             )
+    .rstn_i              ( rstn_i             )
     );
 
 

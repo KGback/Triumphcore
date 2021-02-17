@@ -1,7 +1,7 @@
 module triumph_if_stage(
     // Clock and Reset
     input  wire             clk_i,
-    input  wire             rst_i,
+    input  wire             rstn_i,
 
     // instruction cache interface
     output wire      [31:0] instr_addr_o,
@@ -20,8 +20,8 @@ module triumph_if_stage(
 reg [31:0] pc;
 reg [31:0] opPC_data;
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
+always @(posedge clk_i or posedge rstn_i) begin
+    if (!rstn_i) begin
         opPC_data   <= 32'b0;
         pc          <= 32'b0;
     end
@@ -49,7 +49,7 @@ assign instr_addr_o = pc;
 assign instr_valid_id_o = 1'b1;
 
 always @(*) begin
-    if (rst_i) begin
+    if (!rstn_i) begin
         instr_data_id_o = 0;
     end
     else

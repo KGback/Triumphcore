@@ -1,7 +1,7 @@
 module sram_instr(
     // Clock and Reset
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
 
     input  wire        req_i,
     input  wire        we_i,
@@ -13,8 +13,8 @@ module sram_instr(
 reg [31:0] ram [30:0];
 reg [31:0] raddr_q;
 
-    always @(posedge clk_i or posedge rst_i) begin
-        if (rst_i) begin
+    always @(posedge clk_i or posedge rstn_i) begin
+        if (!rstn_i) begin
             ram[0]  = 32'h0000_0000;
             ram[1]  = 32'b0000000_00000_00000_000_00000_0110011;  //  add x0,x0,x0
             ram[2]  = 32'b0000000_00000_00000_000_00000_0110011;  //  add x0,x0,x0

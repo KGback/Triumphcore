@@ -3,7 +3,7 @@
 module triumph_id_controller(
     // Clock and Reset
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
 
     input  wire [6:0]  opcode_i,
     input  wire [2:0]  funct3_i,

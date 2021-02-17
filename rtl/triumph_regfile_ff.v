@@ -1,7 +1,7 @@
 module triumph_regfile_ff(
     // Clock and Reset
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
     // id stage
     input  wire [4:0]  rs1_addr_id_i,
     input  wire [4:0]  rs2_addr_id_i,
@@ -19,7 +19,7 @@ reg [31:0] mem_ff[31:0];
 
 // writeback to rd register
 always @(*) begin
-    if (rst_i) begin
+    if (!rstn_i) begin
         mem_ff[0]  = 32'b0;
         mem_ff[1]  = 32'h0000_0001;
         mem_ff[2]  = 32'h0000_0001;

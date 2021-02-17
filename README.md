@@ -11,7 +11,7 @@ refer to the link: https://github.com/riscv/riscv-gnu-toolchain
 
 ## Begin to test
 
-$ cd sim
-$ make sanity
+ % cd sim
+ % make sanity
 
 After open simvision, you can source sim/scripts/signals.svwf in the cadence console, the you will see the output of critical signals with different colors.

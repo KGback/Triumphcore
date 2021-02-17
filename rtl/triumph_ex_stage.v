@@ -2,7 +2,7 @@
 
 module triumph_ex_stage(
     input  wire        clk_i,
-    input  wire        rst_i,
+    input  wire        rstn_i,
     // from regfile
     input  wire [31:0] op1_data_i,
     input  wire [31:0] op2_data_i,
@@ -23,8 +23,8 @@ reg  [6:0]  op_type;
 reg  [2:0]  instr_type;
 reg  [31:0] op3_data_wb;
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
+always @(posedge clk_i or posedge rstn_i) begin
+    if (!rstn_i) begin
         op1_data            <= 32'b0;
         op2_data            <= 32'b0;
         op_type             <= 7'b0;

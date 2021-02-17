@@ -22,7 +22,7 @@
 
 module triumphcore_wrapper(
     input   logic        clk_i,
-    input   logic        rst_i
+    input   logic        rstn_i
     );
 
 logic [31:0] pc;
@@ -37,7 +37,7 @@ logic [31:0]   data_display;
 
 triumph_core triumph_core_i(
     .clk_i              ( clk_i             ),
-    .rst_i              ( rst_i             ),
+    .rstn_i              ( rstn_i             ),
     .flag1s_i           ( flag1s            ),
     .instr_addr_o       ( pc                ),
     .instr_rdata_i      ( instr_rdata       ),
@@ -50,7 +50,7 @@ triumph_core triumph_core_i(
 
 sram_instr sram_instr_i(
     .clk_i          ( clk_i         ),
-    .rst_i          ( rst_i         ),
+    .rstn_i          ( rstn_i         ),
     .req_i          ( 1'b1          ),
     .we_i           ( 1'b0          ),
     .addr_i         ( pc            ),
@@ -60,7 +60,7 @@ sram_instr sram_instr_i(
 
 sram_data sram_data_i(
     .clk_i          ( clk_i             ),
-    .rst_i          ( rst_i             ),
+    .rstn_i          ( rstn_i             ),
     .req_i          ( 1'b1              ),
     .we_i           ( dcache_write_en   ),
     .addr_i         ( dcache_addr       ),
