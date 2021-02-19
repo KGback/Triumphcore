@@ -27,8 +27,9 @@ TB_FL          = $(TB_DIR)/tb.flist
 XCOMP_OPT	=		-64bit \
 					-access +r\
 					-disable_sem2009\
-					-quiet\
 					-sv \
+					-uvm -uvmhome CDNS-1.2-ML\
+					+UVM_VERBOSITY=MEDIUM \
 					-top $(TB_TOP) \
 					+incdir+$(TB_DIR)\
 					+incdir+$(RTL_DIR)\
@@ -37,12 +38,16 @@ XCOMP_OPT	=		-64bit \
 XELAB_OPT   = 		-64bit\
 					-access +r\
 					-disable_sem2009\
+					-uvm -uvmhome CDNS-1.2-ML\
+					+UVM_VERBOSITY=MEDIUM \
+					+UVM_NO_RELNOTES\
 					-timescale 1ns/1ps\
 					+incdir+$(TB_DIR)\
 					+incdir+$(RTL_DIR)\
 					-f $(TRIUMPHCORE_FL) \
 					-f $(TB_FL)
 XSIM_OPT	=		-64bit \
+					+UVM_NO_RELNOTES\
 					-R -xmlibdirname $(XRUN_RESULTS)/xcelium.d \
 					$(XRUN_GUI)\
 					-input $(SIM_DIR)/scripts/probe.tcl
@@ -66,9 +71,6 @@ xcomp:
 	@echo "* Compiling xrun in $(XRUN_RESULTS)"
 	@echo "* Log: $(XRUN_RESULTS)/xrun.log"
 	@echo "$(BANNER)"
-	cd $(XRUN_RESULTS) && xrun -compile\
-		$(XCOMP_OPT) \
-		-l xcomp.log 
 	cd $(XRUN_RESULTS) && xrun -elaborate \
 		${XELAB_OPT}\
 		-l xelab.log
@@ -78,10 +80,11 @@ sanity: xcomp
 	
 sim: xcomp $(target_elf)
 
-%.xrun: %.elf
+%.xrun: %.bin
 	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
 	cd $(XRUN_RESULTS)/$(basename $@) && xrun \
 			$(XSIM_OPT)\
+			+bin_file=$(XRUN_RESULTS)/$(basename $@)/$(basename $@).bin\
 			-l xsim.log
 	cd $(XRUN_RESULTS)/$(basename $@) && simvision waves.shm
 
@@ -95,17 +98,19 @@ help:
 # some toolchain options
 COMMON32_OPT=-Wa,-march=rv32i -mabi=ilp32 -g -Wl,--start-group,-lg,-lgloss,--end-group -lm -DRVTEST_ASSERT
 GCC_OPTION=-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles
+%.bin: %.elf
+	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objcopy $< $@
+	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objdump -D $< > $(basename $@).dump
 
 %.elf: ${TESTS_DIR}/${TEST}/%.S
 	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
 	cp ${TESTS_DIR}/${TEST}/$(basename $@).S $(XRUN_RESULTS)/$(basename $@)
 	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-gcc ${COMMON32_OPT} ${GCC_OPTION} -c $< -o $@
-	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objdump -D $@ > $(basename $@).dump
+	
 %.elf: ${TESTS_DIR}/${TEST}/%.c
 	@mkdir -p $(XRUN_RESULTS)/$(basename $@)
 	cp ${TESTS_DIR}/${TEST}/$(basename $@).c $(XRUN_RESULTS)/$(basename $@)
 	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-gcc ${COMMON32_OPT} ${GCC_OPTION} -c $< -o $@
-	cd $(XRUN_RESULTS)/$(basename $@) && riscv32-unknown-elf-objdump -D $@ > $(basename $@).dump
 
 clean:
 	rm -rf $(BUILD_DIR)

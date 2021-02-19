@@ -10,7 +10,7 @@ module sram_instr(
     output wire [31:0] rdata_o
 );
 
-reg [31:0] ram [30:0];
+reg [31:0] ram [300:0];
 reg [31:0] raddr_q;
 
     always @(posedge clk_i or posedge rstn_i) begin
